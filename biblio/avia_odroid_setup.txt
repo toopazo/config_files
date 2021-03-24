@@ -1,0 +1,133 @@
+##Odroid setupt
+
+v1 Junyi Geng
+Oct.21 2016
+
+v2 Tomas Opazo
+Jun 2018
+
+---------------------------------------------------------------------
+### Flash eMMC card.
+    Step 1: Download ubuntu img file from 
+    http://odroid.in/ubuntu_14.04lts/ 
+    choose the one with size 188M to your own linux computer, eg. linux-img. Then uncompress the file
+	$ unxz ---
+    Step 2: Attach the USB SD card readear with eMMC card adapter into an appropriate USB port. Use the command 
+        $ df -h 
+        to check the filesystem info of the eMMC module. Carefully figure out the write destination path the media, eg:/dev/sdb or /dev/sda...
+    Step 3: Use the "dd" command to construct the image copy command carefully using appropriate input and output paths:
+    $ cd ~/linux-img
+    $ sudo dd \
+      if=./ubuntu-14.04lts-server-odroid-xu3-20150725.img \
+      of=/dev/sdb \
+      bs=1M conv=fsync
+    $ sync
+The "dd" command is very powerful, so use if with a lot of care. If incorrect parameters (especially the of parameter) are used here, you could potentially ruin the OS installation of the computer. The "dd" command is often referred to as the disk destroyer command.
+This step could take a while. So wait for it to complete before processing.
+    Step 4: Install "gparted" on your own computer if you haven't. Use "gparted" to resize the eMMC card. Make it to the largest volume. 
+    Step 5: Once completed. Remove the boot media and insert the eMMC module into the appropriate port on the odroid.
+
+---------------------------------------------------------------------
+### Powering up & booting
+    Step 1: Insert the power cable, which will be indicated by the red LED lighting up. 
+    Step 2: Connect the magic cable from odroid to your own computer. Use the command
+        $ ls /dev/tty* 
+        to check which serial port it uses. eg: ttyUSB0. Get into the odroid using the command 
+        $ screen ttyUSB0 115200. 
+        Don't make mistake on the baud rate. You will see a bunch of stuff flying, that's the booting process. 
+    Step 3: You probably will get stuck on the network configuration. Just ignore that, wait until the booting finish. Then you are in the odroid.
+        $ cd /etc/init.
+        Use your prefered editor to open the file "failsafe.conf" with sudo. Comment out all the "sleep" lines.
+
+---------------------------------------------------------------------
+### Change user name and host name
+    Step 1: Use the command 
+        $ sudo adduser
+        to setup a new user name: avia. Just follow the prompts to type in the new username and corresponding password. 
+    Step 2: Use the command
+        $ sudo usermod -a -G sudo avia
+        and the command 
+        $ sudo usermod -a -G dialout avia
+        to setup the permission for the newuser avia
+    Step 3: Use 
+        $ su avia
+        to get into newuser or 
+        $ exit avia
+        to exit
+        You can also use 
+        $ sudo deluser root 
+        to delete the dedault user "root", leave only one user in odroid.
+    Step 4: go to "/etc/hosts" and "/etc/hostname", change the default name "odroid-server" into any name you want. Restart the odroid to see the name changes.
+
+---------------------------------------------------------------------
+### Setup a shared network with your own computer
+    Step 1: Connect an ethernet cable from odroid to your PC. Click "Edit connection" in your ubuntu, then click "add", choose the ethernet option. 
+    Step 2: In the pop-up window, give a name to the connection. Then in the "Ipv4-setting", choose the method "Shared with other computer". In "Ipv6-setting", choose the method "Automatic"
+    Step 3: Then connect to the new connection. In odroid termial, you should be able to ping www.google.com if your own computer has already been on the internet. 
+    Step 4: Use "ifconfig" to check this odroid's IP address and hwaddress.
+    Step 5: Go the "/etc/network/interface.d", you should see a file named "eth0". Change the content as 
+        auto eth0
+        iface eth0 inet dhcp
+        hwaddress ether xx:xx:xx:xx:xx:xx
+        dns-nameserver 8.8.8.8
+
+        auto eth0:1
+        iface eth0:1 inet static
+        address xx.xx.x.xx
+        netmask 255.255.255.0
+
+---------------------------------------------------------------------
+### Setup ssh 
+    Step 1: You should be under the new username and hostname now. 
+        Use the command to generate public key for this odroid
+        $ ssh-keygen -t rsa. 
+        By default, it should be saved at .ssh/. 
+        And you should see id_rsa id_rsa.pub
+    Step 2: Open another terminal on your own computer, ssh into your account
+        at uhura (Make sure you connected to the vpn). 
+        cd into .ssh/, use your prefered editor to open the file 
+        named "authorized_keys.
+    Step 3: Copy all the content in the id_rsa.pub of odroid into 
+        the "autherized keys" of uhura (note it should only be text without 
+        any format).
+    Step 4: You should be able to ssh into uhura from odroid now.
+
+---------------------------------------------------------------------
+### Setup svn
+    Step 1: Use the command 
+        $ sudo apt-get update 
+        and
+        $ sudo apt-get upgrade 
+        to update the system and packages.
+    Step 2: Use "sudo apt-get install" to install the "subversion"
+    Step 3: Check out the repostiories you like from uhura. 
+        $ svn co svn+ssh://xxx@uhura.aero.psu.edu/Repositories/... --depth immediates
+        The --depth immediates option will include the immediate target of the operation and any of its immediate file or direction children. The directory children will themselves be empty.
+    Step 4: Go to the folder you want to check out all the stuff from and execute 
+        $ svn up --set-depth infinity
+        The infinity option include the immediate target, its file and directory children, its children's children, and so on to full recursion.
+
+---------------------------------------------------------------------
+### Install software
+    With the internet, you can install any software you want.
+
+---------------------------------------------------------------------
+### Install Ros 
+
+    Follow instructions on   
+    http://wiki.ros.org/indigo/Installation/Ubuntu    
+
+---------------------------------------------------------------------
+### Setup wireless
+    Step 1: Go to "/etc/network/interface.d", make a new file named wlan0. Put the following content in it.
+    auto wlan0
+    iface wlan0 inet dhcp
+        wpa-ssid your wifi name 
+        wpa-ap-scan 1
+        wpa-psk your wifi password
+    Step 2: Plugin the wireless card. Use "sudo ifdown ..." or "sudo ifup ..." to disable or enable the current network interfaces.    
+
+
+
+
+

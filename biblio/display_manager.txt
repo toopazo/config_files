@@ -1,0 +1,21 @@
+
+---------------------------------------------------------------------
+# Display manager
+
+sudo apt-get installer lightdm
+sudo apt-get remove lightdm
+
+# choose between display managers
+sudo dpkg-reconfigure lihtdm
+
+# check display manager
+cat /etc/X11/default-display-manager
+
+# To switch from GUI to CLI: 
+systemctl set-default multi-user.target
+
+# To switch from CLI to GUI: 
+systemctl set-default graphical.target
+
+# To stop gui
+sudo service lightdm stop
