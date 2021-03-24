@@ -1,0 +1,26 @@
+
+# Veracrypt
+
+1) run command veracrypt
+
+2) if not installed, install it using .tar file
+
+3) Select veracrypt folder holding the container and mount it (any slot)
+
+4) Enter passPhrase
+
+5) Enter sudo password
+
+6) Wait 
+
+7) Voila !
+
+8) Do NOT forget to dismount it after you are done
+
+
+If you can not mount, try
+veraCrypt >> Settings >> Default keyfiles > Tab-[System Integration]
+[System Integration] > Kernel Services
+"Do not use kernel cryptographic services" (<--- check it)
+
+

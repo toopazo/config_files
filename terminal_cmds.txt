@@ -1,0 +1,124 @@
+---------------------------------------------------------------------
+# files and folder commands
+
+## This will search /path-to-search for any files 
+## named "*.txt" and display their pathnames.
+find /path-to-search -name "*.txt"
+
+## Will delete those files
+find . -name "*.bak" -type f -delete
+
+## This will execute the last "find" command executed. 
+## In fact "!" can be used with any command to invoke previous run of that command.
+!find
+
+## Search and replace "foo" by "bar"
+find . -type f -exec sed -i 's/foo/bar/g' {} +
+
+## Occurrences of "foo" will be replaced with "bar".
+sed -i 's/foo/bar/g' *
+
+## More on sed
+http://www.grymoire.com/Unix/Sed.html
+https://www.folkstalk.com/2012/01/sed-command-in-unix-examples.html
+
+## Find files containing "asd"
+grep -r "asd" path/
+
+## Rename filenames
+rename 's/CH3/SHE/' *
+
+## count files in current folder
+ls -F |grep -v / | wc -l
+
+## show subfolder size
+du -h --max-depth=1 | sort -hr
+
+## Will change ownership (both user and group) of all files 
+## and directories inside of directory and directory itself.
+sudo chown -R username:group directory
+---------------------------------------------------------------------
+# Display manager
+
+sudo apt-get installer lightdm
+sudo apt-get remove lightdm
+
+## choose between display managers
+sudo dpkg-reconfigure lihtdm
+
+## check display manager
+cat /etc/X11/default-display-manager
+
+---------------------------------------------------------------------
+# SVN
+
+svn up --set-depth infinity
+svn up --set-depth immediates
+svn up
+
+---------------------------------------------------------------------
+# ros
+
+## Install missing dependencies
+rosdep install --from-paths src --ignore-src
+
+---------------------------------------------------------------------
+# Network commands
+
+## List current DNS servers
+nmcli device show <interfacename> | grep IP4.DNS
+
+## network manager
+sudo service network-manager restart
+
+---------------------------------------------------------------------
+# APT related
+
+## Search installed packages
+apt-cache search keyword
+
+---------------------------------------------------------------------
+# ssh
+
+## To ssh without passwd into target computer we need to set up keys with 
+ssh-keygen -t rsa
+
+## Then add that key to ~/.ssh/authorized_keys file in the target computer
+## To preload passphrase in each terminal use
+ssh-add
+
+## Then to connect simply type
+ssh user@ip
+
+---------------------------------------------------------------------
+# openssl 
+
+## A simple way to encrypt a single file is with openssl:
+openssl des3 < yourfile.txt > yourfile.txt.des3
+
+## This will prompt you for a passphrase, 
+## which you will need to enter later when decrypting the file.
+openssl des3 -d < yourfile.txt.des3 > yourfile.txt.decrypted
+
+---------------------------------------------------------------------
+# Hostname, users and accounts
+
+## Display computer info
+hostnamectl 
+
+## battery and hardware
+power -i `upower -e | grep 'BAT'`
+
+---------------------------------------------------------------------
+# Serial port and groups
+
+## Normally adding yourself to dialout allows you to read/write to serial port
+## But sometimes the group is plugdev, to check use this command
+ls -l /dev/ttyUSB0 
+
+## Edit permission manually
+sudo chmod 660 /dev/ttyUSB0
+
+
+
+

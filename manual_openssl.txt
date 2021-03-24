@@ -1,0 +1,14 @@
+
+###############################################################################
+# openssl 
+
+A simple way to encrypt a single file is with openssl
+
+1) openssl des3 < yourfile.txt > yourfile.txt.des3
+
+2) This will prompt you for a passphrase, which you will need to enter 
+later when decrypting the file.
+
+3) openssl des3 -d < yourfile.txt.des3 > yourfile.txt.decrypted
+
+4) pass is the same as root
