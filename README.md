@@ -1,2 +1,2 @@
 # config_files
-Storage for config files
+Set of config files for general use
