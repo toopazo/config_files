@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 # import external functions
-source common_functions.sh
+# source common_functions.sh
 
 #####################
 # start of the script
 #####################
-preprocessing_info
+# preprocessing_info
 
-echo "creating ~/.vimrc"
+echo "Copying ~/.vimrc"
 cp ../config_files/.vimrc ~/
 
-echo "creating ~/.tmux.conf"
+echo "Copying ~/.tmux.conf"
 cp ../config_files/.tmux.conf ~/
 
 ls -all ~/

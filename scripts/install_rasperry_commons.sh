@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # import external functions
-source common_functions.sh
+# source common_functions.sh
 
 #####################
 # start of the script
 #####################
-preprocessing_info
+# preprocessing_info
 
 sudo apt-get update
 
